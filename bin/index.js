@@ -27,9 +27,10 @@ const main = async () => {
       const modelsPath = await readdir(modelDirectory);
       const models = [];
       for (const _model of modelsPath) {
-        if (_model.indexOf('.js') != -1) {
+        if (_model.indexOf('.js') >= 0 || fs.existsSync(path.join(modelDirectory, _model, 'index.js'))) {
+          // Its a directory, check if it has index.js file
           const model = require(path.join(modelDirectory, _model));
-          models.push(model);
+          models.push(model.Products || model);
         }
       }
       const svg = await ERD.generateFromModels(models, {
